@@ -1,0 +1,467 @@
+{
+    "appid": "0d2d6df5-44a9-478a-b76b-3f8853ae14ca",
+    "name": "OpenAI API ChatGPT for SOAR",
+    "description": "Connect SOAR to ChatGPT for Chat, Completions, Edits, Moderations, and Embeddings",
+    "type": "information",
+    "product_vendor": "OpenAI",
+    "logo": "openaichatgptapi.png",
+    "logo_dark": "openaichatgptapi_dark.png",
+    "product_name": "ChatGPT",
+    "python_version": "3",
+    "product_version_regex": ".*",
+    "publisher": "Splunkable, LLC",
+    "license": "Copyright (c) Splunkable, LLC, 2023",
+    "app_version": "1.0.0",
+    "utctime_updated": "2023-06-26T18:25:54.910553Z",
+    "package_name": "phantom_openaiapichatgptforsoar",
+    "main_module": "openaichatgptapi_connector.py",
+    "min_phantom_version": "5.3.3.92213",
+    "app_wizard_version": "1.0.0",
+    "configuration": {
+        "Organization ID": {
+            "description": "Your OpenAI API Org ID",
+            "data_type": "string",
+            "required": true,
+            "value_list": [],
+            "default": "",
+            "order": 0,
+            "name": "Organization ID",
+            "id": 0
+        },
+        "API Key": {
+            "description": "Your OpenAI API Key",
+            "data_type": "password",
+            "required": true,
+            "order": 1,
+            "name": "API Key",
+            "id": 1
+        }
+    },
+    "actions": [
+        {
+            "action": "test connectivity",
+            "identifier": "test_connectivity",
+            "description": "Validate the asset configuration for connectivity using supplied configuration",
+            "verbose": "",
+            "type": "test",
+            "read_only": true,
+            "parameters": {},
+            "output": [],
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "get moderation",
+            "identifier": "get_moderation",
+            "description": "Check a string for sentiment.",
+            "verbose": "The Moderation models are designed to check whether content complies with OpenAI's usage policies. The models provide classification capabilities that look for content in the following categories: hate, hate/threatening, self-harm, sexual, sexual/minors, violence, and violence/graphic. You can find out more in the moderation guide -> https://platform.openai.com/docs/guides/moderation/overview",
+            "type": "investigate",
+            "read_only": true,
+            "parameters": {
+                "input": {
+                    "description": "String to be checked for sentiment.",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "contains": [],
+                    "value_list": [],
+                    "default": "",
+                    "order": 0,
+                    "name": "input",
+                    "id": 1,
+                    "param_name": "input"
+                },
+                "model": {
+                    "description": "Moderation model, all lower case, found here: https://platform.openai.com/docs/models/moderation",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "contains": [],
+                    "value_list": [],
+                    "default": "text-moderation-latest",
+                    "order": 1,
+                    "name": "model",
+                    "id": 2,
+                    "param_name": "model"
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.parameter.input",
+                    "data_type": "string",
+                    "contains": [],
+                    "column_name": "input",
+                    "column_order": 0
+                },
+                {
+                    "data_path": "action_result.parameter.model",
+                    "data_type": "string",
+                    "contains": [],
+                    "column_name": "model",
+                    "column_order": 1
+                },
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "column_name": "status",
+                    "column_order": 2
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric"
+                }
+            ],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "get embeddings",
+            "identifier": "get_embeddings",
+            "description": "Creates an embedding vector representing the input text.",
+            "verbose": "Creates an embedding vector representing the input text. https://platform.openai.com/docs/api-reference/embeddings",
+            "type": "investigate",
+            "read_only": true,
+            "parameters": {
+                "input": {
+                    "description": "Input string to vectorize",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "contains": [],
+                    "value_list": [],
+                    "default": "",
+                    "order": 0,
+                    "name": "input"
+                },
+                "model": {
+                    "description": "OpenAI Model to Use",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "contains": [],
+                    "value_list": [],
+                    "default": "text-embedding-ada-002",
+                    "order": 1,
+                    "name": "model"
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.parameter.input",
+                    "data_type": "string",
+                    "contains": [],
+                    "column_name": "input",
+                    "column_order": 0
+                },
+                {
+                    "data_path": "action_result.parameter.model",
+                    "data_type": "string",
+                    "contains": [],
+                    "column_name": "model",
+                    "column_order": 1
+                },
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "column_name": "status",
+                    "column_order": 2
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric"
+                }
+            ],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "get chat completion",
+            "identifier": "get_chat_completion",
+            "description": "Query ChatGPT for additional context",
+            "verbose": "",
+            "type": "investigate",
+            "read_only": true,
+            "parameters": {
+                "system_input": {
+                    "description": "Instructions for how ChatGPT should respond.",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "contains": [],
+                    "value_list": [],
+                    "default": "You are a helpful assistant.",
+                    "order": 0,
+                    "name": "system_input",
+                    "id": 1,
+                    "param_name": "system_input"
+                },
+                "user_input": {
+                    "description": "Prompt for ChatGPT to respond to",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "contains": [],
+                    "value_list": [],
+                    "default": "Thanks for being so awesome ChatGPT!",
+                    "order": 1,
+                    "name": "user_input",
+                    "id": 2,
+                    "param_name": "user_input"
+                },
+                "model": {
+                    "description": "ChatGPT Model",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "contains": [],
+                    "value_list": [],
+                    "default": "gpt-3.5-turbo",
+                    "order": 2,
+                    "name": "model",
+                    "id": 3,
+                    "param_name": "model"
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.parameter.system_input",
+                    "data_type": "string",
+                    "contains": [],
+                    "column_name": "system_input",
+                    "column_order": 0
+                },
+                {
+                    "data_path": "action_result.parameter.user_input",
+                    "data_type": "string",
+                    "contains": [],
+                    "column_name": "user_input",
+                    "column_order": 1
+                },
+                {
+                    "data_path": "action_result.parameter.model",
+                    "data_type": "string",
+                    "contains": [],
+                    "column_name": "model",
+                    "column_order": 2
+                },
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "column_name": "status",
+                    "column_order": 3
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric"
+                }
+            ],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "get edits",
+            "identifier": "get_edits",
+            "description": "Pass inputs to OpenAI Edit Models",
+            "verbose": "",
+            "type": "investigate",
+            "read_only": true,
+            "parameters": {
+                "model": {
+                    "description": "OpenAI Edit Model to be used",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "contains": [],
+                    "value_list": [],
+                    "default": "text-davinci-edit-001",
+                    "order": 0,
+                    "name": "model"
+                },
+                "input": {
+                    "description": "The input string to be editing",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "contains": [],
+                    "value_list": [],
+                    "default": "PhillyDelphia",
+                    "order": 1,
+                    "name": "input"
+                },
+                "instructions": {
+                    "description": "The edit instructions for input",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "contains": [],
+                    "value_list": [],
+                    "default": "Please fix the spelling mistakes in this US city.",
+                    "order": 2,
+                    "name": "instructions"
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.parameter.model",
+                    "data_type": "string",
+                    "contains": [],
+                    "column_name": "model",
+                    "column_order": 0
+                },
+                {
+                    "data_path": "action_result.parameter.input",
+                    "data_type": "string",
+                    "contains": [],
+                    "column_name": "input",
+                    "column_order": 1
+                },
+                {
+                    "data_path": "action_result.parameter.instructions",
+                    "data_type": "string",
+                    "contains": [],
+                    "column_name": "instructions",
+                    "column_order": 2
+                },
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "column_name": "status",
+                    "column_order": 3
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric"
+                }
+            ],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "get completion",
+            "identifier": "get_completion",
+            "description": "Creates a completion for the provided prompt and parameters.",
+            "verbose": "Creates a completion for the provided prompt and parameters.",
+            "type": "investigate",
+            "read_only": true,
+            "parameters": {
+                "model": {
+                    "description": "Completion model to be used",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "contains": [],
+                    "value_list": [],
+                    "default": "text-davinci-003",
+                    "order": 0,
+                    "name": "model"
+                },
+                "input": {
+                    "description": "Prompt for the Completion model",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "contains": [],
+                    "value_list": [],
+                    "default": "What is 2 + 2?",
+                    "order": 1,
+                    "name": "input"
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.parameter.model",
+                    "data_type": "string",
+                    "contains": [],
+                    "column_name": "model",
+                    "column_order": 0
+                },
+                {
+                    "data_path": "action_result.parameter.input",
+                    "data_type": "string",
+                    "contains": [],
+                    "column_name": "input",
+                    "column_order": 1
+                },
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "column_name": "status",
+                    "column_order": 2
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric"
+                }
+            ],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        }
+    ],
+    "pip3_dependencies": {
+        "pypi": [
+            {
+                "module": "openai"
+            },
+            {
+                "module": "numpy"
+            }
+        ]
+    },
+    "custom_made": true,
+    "directory": "openaiapichatgptforsoar_0d2d6df5-44a9-478a-b76b-3f8853ae14ca",
+    "version": 1,
+    "appname": "-",
+    "executable": "spawn3",
+    "disabled": false,
+    "copied_from_id": 28,
+    "copied_from_version": "1.1.1"
+}
