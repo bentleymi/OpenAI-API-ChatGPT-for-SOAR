@@ -170,11 +170,12 @@ class OpenaiChatgptApiConnector(BaseConnector):
         # Query OpenAI-API
         config = self.get_config()
         openai.api_key = config.get("API Key")
-        response = openai.Model.list()
-        if len(response.data) < 20:
+        response = openai.models.list().data
+        models   = [model.id for model in response]
+        if len(response) < 20:
             ret_val = phantom.APP_ERROR
         else:
-            self.save_progress("Count of Models available is %s." %(str(len(response.data))))
+            self.save_progress("Count of Models available is %s." %(str(len(response))))
             ret_val = phantom.APP_SUCCESS
             
         if phantom.is_fail(ret_val):
@@ -184,7 +185,7 @@ class OpenaiChatgptApiConnector(BaseConnector):
             # return action_result.get_status()
 
         # Return success
-        action_result.add_data(response)
+        action_result.add_data(models)
         self.save_progress("Test Connectivity Passed")
         return action_result.set_status(phantom.APP_SUCCESS)
 
@@ -204,11 +205,11 @@ class OpenaiChatgptApiConnector(BaseConnector):
         openai.api_key = config.get("API Key")
         input = param['input']
         model = param['model']
-        response = openai.Moderation.create(
+        response = openai.moderations.create(
             input=input,
             model=model
         )
-        moderation = response['results']
+        moderation = response.results
         if len(moderation) < 1:
                 ret_val = phantom.APP_ERROR
         else:
@@ -223,7 +224,7 @@ class OpenaiChatgptApiConnector(BaseConnector):
         # Now post process the data,  uncomment code as you deem fit
 
         # Add the response into the data section
-        action_result.add_data(response)
+        action_result.add_data(str(response.results[0].categories))
 
         # Add a dictionary that is made up of the most important values from data into the summary
         # summary = action_result.update_summary({})
@@ -250,7 +251,7 @@ class OpenaiChatgptApiConnector(BaseConnector):
         # Query OpenAI-API
         config = self.get_config()
         openai.api_key = config.get("API Key")
-        response = openai.Embedding.create(
+        response = openai.embeddings.create(
             model=model,
             input=input
         )
@@ -270,7 +271,7 @@ class OpenaiChatgptApiConnector(BaseConnector):
         # Now post process the data,  uncomment code as you deem fit
 
         # Add the response into the data section
-        action_result.add_data(response)
+        action_result.add_data(response.data[0].embedding)
 
         # Add a dictionary that is made up of the most important values from data into the summary
         # summary = action_result.update_summary({})
@@ -299,14 +300,14 @@ class OpenaiChatgptApiConnector(BaseConnector):
         # Query OpenAI-API
         config = self.get_config()
         openai.api_key = config.get("API Key")
-        completion = openai.ChatCompletion.create(
+        completion = openai.chat.completions.create(
             model=model,
             messages=[
                 {"role": "system", "content": systeminput},
                 {"role": "user", "content": userinput }
             ]
         )
-        response = completion.choices[0].message
+        response = completion.choices[0].message.content
         if len(response)<1:
             ret_val = phantom.APP_ERROR
         else:
@@ -321,7 +322,7 @@ class OpenaiChatgptApiConnector(BaseConnector):
         # Now post process the data,  uncomment code as you deem fit
 
         # Add the response into the data section
-        action_result.add_data(response["content"])
+        action_result.add_data(response)
 
         # Add a dictionary that is made up of the most important values from data into the summary
         # summary = action_result.update_summary({})
@@ -333,7 +334,8 @@ class OpenaiChatgptApiConnector(BaseConnector):
 
         # For now return Error with a message, in case of success we don't set the message, but use the summary
         #return action_result.set_status(phantom.APP_ERROR, "Action not yet implemented")
-
+    '''
+    # Edits endpoint is deprecated
     def _handle_get_edits(self, param):
         # Implement the handler here
         # use self.save_progress(...) to send progress messages back to the platform
@@ -385,6 +387,7 @@ class OpenaiChatgptApiConnector(BaseConnector):
 
         # For now return Error with a message, in case of success we don't set the message, but use the summary
         #return action_result.set_status(phantom.APP_ERROR, "Action not yet implemented")
+    '''
 
     def _handle_get_completion(self, param):
         # Implement the handler here
@@ -403,11 +406,13 @@ class OpenaiChatgptApiConnector(BaseConnector):
         # Query OpenAI-API
         config = self.get_config()
         openai.api_key = config.get("API Key")
-        completion = openai.Completion.create(
+        completion = openai.chat.completions.create(
             model=model,
-            prompt=input,
+            messages=[
+                        {"role": "user", "content": input}
+                     ],
         )
-        response = completion.choices[0]
+        response = completion.choices[0].message.content
         if len(response)<1:
             ret_val = phantom.APP_ERROR
         else:
@@ -445,9 +450,10 @@ class OpenaiChatgptApiConnector(BaseConnector):
 
         if action_id == 'get_moderation':
             ret_val = self._handle_get_moderation(param)
-
-        if action_id == 'get_embedding':
-            ret_val = self._handle_get_embedding(param)
+            
+        # There appears to be only one function titled: _handle_get_embeddings()
+        #if action_id == 'get_embedding':
+        #    ret_val = self._handle_get_embedding(param)
 
         if action_id == 'get_embeddings':
             ret_val = self._handle_get_embeddings(param)
@@ -455,8 +461,9 @@ class OpenaiChatgptApiConnector(BaseConnector):
         if action_id == 'get_chat_completion':
             ret_val = self._handle_get_chat_completion(param)
 
-        if action_id == 'get_edits':
-            ret_val = self._handle_get_edits(param)
+        # edits endpoint is deprecated: https://platform.openai.com/docs/api-reference/edits
+        #if action_id == 'get_edits':
+        #    ret_val = self._handle_get_edits(param)
 
         if action_id == 'get_completion':
             ret_val = self._handle_get_completion(param)

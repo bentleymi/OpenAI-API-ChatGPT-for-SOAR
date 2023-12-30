@@ -11,8 +11,8 @@
     "product_version_regex": ".*",
     "publisher": "Splunkable, LLC",
     "license": "Copyright (c) Splunkable, LLC, 2023",
-    "app_version": "1.0.0",
-    "utctime_updated": "2023-06-26T18:25:54.910553Z",
+    "app_version": "2.4.0",
+    "utctime_updated": "2023-12-30T22:16:49.678255Z",
     "package_name": "phantom_openaiapichatgptforsoar",
     "main_module": "openaichatgptapi_connector.py",
     "min_phantom_version": "5.3.3.92213",
@@ -288,94 +288,6 @@
             "versions": "EQ(*)"
         },
         {
-            "action": "get edits",
-            "identifier": "get_edits",
-            "description": "Pass inputs to OpenAI Edit Models",
-            "verbose": "",
-            "type": "investigate",
-            "read_only": true,
-            "parameters": {
-                "model": {
-                    "description": "OpenAI Edit Model to be used",
-                    "data_type": "string",
-                    "required": true,
-                    "primary": true,
-                    "contains": [],
-                    "value_list": [],
-                    "default": "text-davinci-edit-001",
-                    "order": 0,
-                    "name": "model"
-                },
-                "input": {
-                    "description": "The input string to be editing",
-                    "data_type": "string",
-                    "required": true,
-                    "primary": true,
-                    "contains": [],
-                    "value_list": [],
-                    "default": "PhillyDelphia",
-                    "order": 1,
-                    "name": "input"
-                },
-                "instructions": {
-                    "description": "The edit instructions for input",
-                    "data_type": "string",
-                    "required": true,
-                    "primary": true,
-                    "contains": [],
-                    "value_list": [],
-                    "default": "Please fix the spelling mistakes in this US city.",
-                    "order": 2,
-                    "name": "instructions"
-                }
-            },
-            "output": [
-                {
-                    "data_path": "action_result.parameter.model",
-                    "data_type": "string",
-                    "contains": [],
-                    "column_name": "model",
-                    "column_order": 0
-                },
-                {
-                    "data_path": "action_result.parameter.input",
-                    "data_type": "string",
-                    "contains": [],
-                    "column_name": "input",
-                    "column_order": 1
-                },
-                {
-                    "data_path": "action_result.parameter.instructions",
-                    "data_type": "string",
-                    "contains": [],
-                    "column_name": "instructions",
-                    "column_order": 2
-                },
-                {
-                    "data_path": "action_result.status",
-                    "data_type": "string",
-                    "column_name": "status",
-                    "column_order": 3
-                },
-                {
-                    "data_path": "action_result.message",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "summary.total_objects",
-                    "data_type": "numeric"
-                },
-                {
-                    "data_path": "summary.total_objects_successful",
-                    "data_type": "numeric"
-                }
-            ],
-            "render": {
-                "type": "table"
-            },
-            "versions": "EQ(*)"
-        },
-        {
             "action": "get completion",
             "identifier": "get_completion",
             "description": "Creates a completion for the provided prompt and parameters.",
@@ -462,6 +374,6 @@
     "appname": "-",
     "executable": "spawn3",
     "disabled": false,
-    "copied_from_id": 28,
-    "copied_from_version": "1.1.1"
+    "copied_from_id": 12,
+    "copied_from_version": "2.3.0"
 }
